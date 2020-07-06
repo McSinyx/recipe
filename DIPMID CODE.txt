@@ -1,0 +1,128 @@
+""This module allow bidirectional conversions of color values between colors expressed
+in the RGB (Red Green Blue) and other color spaces.
+The three other color spaces it uses are 
+YIQ (Luminance (Y) In-phase Quadrature),
+HLS (Hue Lightess Saturation) and
+HSV (Hue Saturation Value)
+All the coordinates can be between 0 and 1 except the I,Q values the YIQ color space : also accepts floating value in 
+range between 0 and 1 but it can be positive or negative.""
+""
++----------+----------------------------------------+------------------+
+|Function  |	             Purpose	            | Permitted Values |
++----------+----------------------------------------+------------------+
+|rgb_to_yiq|from RGB coordinates to YIQ coordinates |     0 to 1       |
++----------+----------------------------------------+------------------+
+|rgb_to_hls|from RGB coordinates to HLS coordinates |	  0 to 1       |
++----------+----------------------------------------+------------------+
+|rgb_to_hsv|from RGB coordinates to HSV coordinates |	  0 to 1       |
++----------+----------------------------------------+------------------+
+|yiq_to_rgb|from YIQ coordinates to RGB coordinates |	 -1 to 1       |
++----------+----------------------------------------+------------------+
+|hls_to_rgb|from HLS coordinates to RGB coordinates |	  0 to 1       | 
++----------+----------------------------------------+------------------+
+|hsv_to_rgb|from HSV coordinates to RGB coordinates |     0 to 1       |      
++----------+----------------------------------------+------------------+
+""
+# Python program to explain colorsys.rgb_to_yiq() method 
+	
+# importing colorsys module 
+import colorsys 
+
+# Define RGB coordinates 
+r = 0.2
+g = 0.4
+b = 0.4
+
+# Convert the color from RGB 
+# coordinates to YIQ coordinates 
+yiq = colorsys.rgb_to_yiq(r, g, b) 
+
+# Print the yiq coordinates 
+print(yiq) 
+
+# Python program to explain colorsys.yiq_to_rgb() method 
+	
+# importing colorsys module 
+import colorsys 
+
+# Define YIQ coordinates 
+y = 0.34
+i = -0.12
+q = -0.04
+
+# Convert the color from RGB 
+# coordinates to YIQ coordinates 
+rgb = colorsys.yiq_to_rgb(y, i, q) 
+
+# Print the RGB coordinates 
+print(rgb) 
+
+# Python program to explain colorsys.rgb_to_hls() method 
+	
+# importing colorsys module 
+import colorsys 
+
+# Define RGB coordinates 
+r = 0.2
+g = 0.4
+b = 0.4
+
+# Convert the color from RGB 
+# coordinates to HLS coordinates 
+hls = colorsys.rgb_to_hls(r, g, b) 
+
+# Print the HLS coordinates 
+print(hls) 
+
+# Python program to explain colorsys.hls_to_rgb() method 
+	
+# importing colorsys module 
+import colorsys 
+
+# Define HLS coordinates 
+h = 0.2
+l = 0.7
+s = 0.5
+
+# Convert the color from HLS 
+# coordinates to RGB coordinates 
+rgb = colorsys.hls_to_rgb(h, l, s) 
+
+# Print the RGB coordinates 
+print(rgb) 
+
+
+# Python program to explain colorsys.rgb_to_hsv() method 
+	
+# importing colorsys module 
+import colorsys 
+
+# Define RGB coordinates 
+r = 0.2
+g = 0.4
+b = 0.4
+
+# Convert the color from RGB 
+# coordinates to HSV coordinates 
+hsv = colorsys.rgb_to_hsv(r, g, b) 
+
+# Print the HSV coordinates 
+print(hsv) 
+
+# Python program to explain colorsys.hsv_to_rgb() method 
+	
+# importing colorsys module 
+import colorsys 
+
+# Define HSV coordinates 
+h = 0.5
+s = 0.5
+v = 0.4
+
+# Convert the color from HSV 
+# coordinates to RGB coordinates 
+rgb = colorsys.hsv_to_rgb(h, s, v) 
+
+# Print the RGB coordinates 
+print(rgb) 
+
