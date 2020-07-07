@@ -12,7 +12,7 @@ with open('turbo.csv') as turbo: TURBO = list(reader(turbo))
 
 def disp(image, name):
     """Display the given image."""
-    imshow(name, image.astype(uint8))
+    imshow(name, image)
     wait_key()
 
 
@@ -22,13 +22,15 @@ def map_color(grey, mapping):
     g = vectorize(lambda i: mapping[i][1])
     b = vectorize(lambda i: mapping[i][2])
     # OpenCV uses BGR by default for whatever reason.
-    return stack((b(grey), g(grey), r(grey)), axis=-1)
+    return stack((b(grey), g(grey), r(grey)), axis=-1).astype(uint8)
 
 
-heightmapper = imread('heightmapper.png', IMREAD_GRAYSCALE)
-heightmapper_turbo = colormap(heightmapper, COLORMAP_TURBO)
-disp(heightmapper, 'original')
-disp(heightmapper_turbo, "OpenCV's turbo")
-disp(map_color(heightmapper, TURBO), 'manually mapped turbo')
-imwrite('heightmapper-opencv.png', heightmapper_turbo, PNG_COMPRESSION)
-imwrite('heightmapper-manual.png', heightmapper_turbo, PNG_COMPRESSION)
+if __name__ == '__main__':
+    heightmapper = imread('heightmapper.png', IMREAD_GRAYSCALE)
+    heightmapper_opencv = colormap(heightmapper, COLORMAP_TURBO)
+    heightmapper_manual = map_color(heightmapper, TURBO)
+    disp(heightmapper, 'original')
+    disp(heightmapper_opencv, "OpenCV's turbo")
+    disp(heightmapper_manual, 'manually mapped turbo')
+    imwrite('heightmapper-opencv.png', heightmapper_opencv, PNG_COMPRESSION)
+    imwrite('heightmapper-manual.png', heightmapper_manual, PNG_COMPRESSION)
