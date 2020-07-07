@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from cv2 import imread, imshow, waitKey, merge
 from numpy import asarray
 
