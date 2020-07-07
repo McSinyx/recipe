@@ -60,7 +60,8 @@ def chroma_abbe_corr(src):
 img = imread('ca4_before.png')
 
 imshow('Origin', img)
+waitKey()
 
 res = chroma_abbe_corr(img)
 imshow('Corrected', res)
-waitKey(0)
+waitKey()

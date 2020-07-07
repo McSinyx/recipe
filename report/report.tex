@@ -73,6 +73,34 @@ on the matter.
 \section{Color Spaces}
 
 \section{Color Image Enhancements}
+\subsection{Contrast Stretching}
+Contrast Stretching is a linear image enhancement technique that tries to
+improve the contrast by stretching the intensity values of an image to fill the
+entire dynamic range.
+
+An image of low contrast has a small difference between its dark and light
+pixel values.  The histogram of a low contrast image is usually bends to the
+left (mostly light) or to the right (mostly dark), or located around the middle
+(mostly gray).  Contrast Stretching computes the highest and the lowest pixel
+intensity values, sets them to 255 and 0 respectively, and scales all other
+pixel intensities accordingly.
+\[\mathrm{contrast} = \frac{I_\mathrm{max}-I_\mathrm{min}}
+                           {I_\mathrm{max}+I_\mathrm{min}}\]
+
+\begin{center}
+  \includegraphics[width = 0.40\textwidth]{contrast-mapping.png}
+\end{center}
+
+Both Contrast Stretching or Histogram Equalization can be used to adjust image
+intensities to enhance contrast of pictures.  While a non-linear Histogram
+Equalization technique is more reliable, in contrast stretching, there exists a
+one-to-one relationship of the intensity values between the source image and
+the target image i.e, the original image can be restored from the
+contrast-stretched image.  This cannot be done with Histogram Equalization.
+ 
+\subsection{Component Stretching}
+
+\subsection{Local Contrast Enhacement}
 
 \section{Pseudo Color Rendering}
 By mapping each intensity level to a color, one may derive a pseudo color image
