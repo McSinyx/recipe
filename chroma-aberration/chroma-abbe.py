@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from cv2 import imread, imshow, waitKey, merge
-from numpy import asarray
+from numpy import transpose
 
 
 def chromabe(blue, green, red, h, w, threshold):
@@ -41,19 +41,26 @@ def chromabe(blue, green, red, h, w, threshold):
                 j = rrange - 2
 
 
-def chroma_abbe_corr(src, res):
+def chroma_abbe_corr(src):
     b, g, r = src[:, :, 0], src[:, :, 1], src[:, :, 2]
-    threshold = 10
+    threshold = 20
 
     chromabe(b, g, r, src.shape[0], src.shape[1], threshold)
-    merge(asarray([b, g, r]), res)
+
+    b = transpose(b)
+    g = transpose(g)
+    r = transpose(r)
+
+    chromabe(b, g, r, src.shape[0], src.shape[1], threshold)
+
+    src[:, :, 0], src[:, :, 1], src[:, :, 2] = b, g, r
+    return src
 
 
 img = imread('ca4_before.png')
-res = None
 
 imshow('Origin', img)
 
-chroma_abbe_corr(img, res)
+res = chroma_abbe_corr(img)
 imshow('Corrected', res)
 waitKey(0)
