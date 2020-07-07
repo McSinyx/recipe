@@ -71,6 +71,61 @@ on the matter.
 \newpage
 \selectlanguage{english}
 \section{Color Spaces}
+The color spaces in image processing aim to facilitate the specifications of
+colors in some standard way.  Different types of color spaces are used in
+multiple fields like in hardware, in multiple applications of creating
+animation, etc.
+
+\subsection{The RGB Color Model}
+In the RGB model each color appears in its primary spectral components of red,
+green and blue. The color subspace if interest is the cube shown in the figure
+below. In which RGB values are at three corners:cyan, magenta and yellow are at
+three other corner: black is at the origin and white is at the corner farthest
+from the origin. In this model, the gray scale(point of equal RGB values)
+extends from black to white along the line joining these two point.  The
+different colors in this model are point on or inside the cube and are defined
+by vectors extending from the origin. For convenience the assumption that all
+color values have been normalized so that the cube shown in the figure is the
+unit cube. That is all values R, G and B are assumed to be in the range [0,1]
+\begin{center}
+  \includegraphics[width=0.80\textwidth]{rgb.png}
+\end{center}
+
+\subsection{The CMY Color Model}
+Cyan, magenta and yellow are the secondary colors of light. That is cyan
+subtracts red light from reflected white light, which itself is composed of
+equal amounts of red, green and blue light.  Most devices that deposit colored
+pigments on paper such as color printers and copies, require CMY data input or
+perform an RGB to CMY conversion internally. This conversion is performed using
+this simple operation:
+\[\begin{bmatrix}C\\M\\Y\end{bmatrix}
+= \begin{bmatrix}1\\1\\1\end{bmatrix}
+- \begin{bmatrix}R\\G\\B\end{bmatrix}\]
+
+\subsection{The HSI Color Model}
+As we have seen, creating colors in the RGB and CMY models and changing from
+one model to the other is a straightforward process. The RGB system matches
+nicely with the fact that the human eye is strongly perceptive to red, green
+and blue primaries. Unfortunately, the RGB, CMY and other similar color models
+are not well suited for describing colors in terms that are practical for human
+interpretation.
+
+When humans view a color object we describe it by its hue, saturation and
+brightness while hue is a color attribute that describes a pure color.
+Brightness is a subjective descriptor that is  practically impossible to
+measure. It embodies the achromatic notion ò intensity and is one of the key
+factors in describing color sensation.The HSI(hue, saturation, intensity) color
+model decouples the intensity component from the color carrying information in
+a color image. The HSI model is an ideal tool for developing image processing
+algorithms based on color descriptions that are natural and intuitive to
+humans, who after all are the developers and users of these algorithms.
+\begin{center}
+  \includegraphics[width=0.55\textwidth]{hsi.png}
+\end{center}
+
+The angle from the red axis gives the hue, the length of the vector is the
+saturation and the intensity is given by the position of the plane on the
+vertical intensity axis
 
 \section{Color Image Enhancements}
 \subsection{Contrast Stretching}
@@ -97,7 +152,7 @@ Equalization technique is more reliable, in contrast stretching, there exists a
 one-to-one relationship of the intensity values between the source image and
 the target image i.e, the original image can be restored from the
 contrast-stretched image.  This cannot be done with Histogram Equalization.
- 
+
 \subsection{Component Stretching}
 
 \subsection{Local Contrast Enhacement}
