@@ -14,7 +14,8 @@
 \vspace*{\stretch{1}}
 \begin{flushright}
   \setlength{\baselineskip}{1.4\baselineskip}
-\textbf{\Huge Color Image Processing}
+\textbf{\Large Random Experiments on\\
+        Color Image Processing and Enhancement}
   \noindent\rule{\textwidth}{5pt}
   \emph{\Large Digital Image Processing}
   \vspace{\stretch{1}}
@@ -68,64 +69,109 @@ digital image processing.  The color image processing lecture notes from
 the UMSL's CS 5420 course~\cite{cs5420} also help us gain initial intuition
 on the matter.
 
-\newpage
 \selectlanguage{english}
 \section{Color Spaces}
 The color spaces in image processing aim to facilitate the specifications of
-colors in some standard way.  Different types of color spaces are used in
-multiple fields like in hardware, in multiple applications of creating
-animation, etc.
+colors in some standard way.  Different color spaces suit different usage,
+namely RGB for computer display, CMYK for printing.
 
-\subsection{The RGB Color Model}
-In the RGB model each color appears in its primary spectral components of red,
-green and blue. The color subspace if interest is the cube shown in the figure
-below. In which RGB values are at three corners:cyan, magenta and yellow are at
-three other corner: black is at the origin and white is at the corner farthest
-from the origin. In this model, the gray scale(point of equal RGB values)
-extends from black to white along the line joining these two point.  The
-different colors in this model are point on or inside the cube and are defined
-by vectors extending from the origin. For convenience the assumption that all
-color values have been normalized so that the cube shown in the figure is the
-unit cube. That is all values R, G and B are assumed to be in the range [0,1]
+\subsection{RGB Color Model}
+The RGB color model is an additive color model~\cite{rgb}.  The name of
+the model comes from the initials of the three additive primary colors,
+red, green, and blue.
+
+The color subspace of interest is the cube shown in the figure below, in which
+red, green and blue values are at three corners; cyan, magenta and yellow are
+at three other and black is at the origin and white is at the corner farthest
+from the origin.
 \begin{center}
   \includegraphics[width=0.80\textwidth]{rgb.png}
 \end{center}
 
+In this model, the gray scale (point of equal RGB values) extends from black
+to white along the line joining these two point.  The different colors in
+this model are point on or inside the cube and are defined by vectors extending
+from the origin.
+
 \subsection{The CMY Color Model}
-Cyan, magenta and yellow are the secondary colors of light. That is cyan
-subtracts red light from reflected white light, which itself is composed of
-equal amounts of red, green and blue light.  Most devices that deposit colored
-pigments on paper such as color printers and copies, require CMY data input or
-perform an RGB to CMY conversion internally. This conversion is performed using
-this simple operation:
+Cyan, magenta and yellow are the secondary colors of light. For instance,
+cyan subtracts red light from reflected ``white'' light composed of equal
+amounts of red, green and blue light.
+
+Most devices that deposit colored pigments on paper such as color printers
+and copies, require CMY data input or perform an RGB to CMY conversion
+internally.  Such conversion is performed using the following operation
 \[\begin{bmatrix}C\\M\\Y\end{bmatrix}
 = \begin{bmatrix}1\\1\\1\end{bmatrix}
 - \begin{bmatrix}R\\G\\B\end{bmatrix}\]
 
 \subsection{The HSI Color Model}
-As we have seen, creating colors in the RGB and CMY models and changing from
-one model to the other is a straightforward process. The RGB system matches
-nicely with the fact that the human eye is strongly perceptive to red, green
-and blue primaries. Unfortunately, the RGB, CMY and other similar color models
-are not well suited for describing colors in terms that are practical for human
-interpretation.
-
+Additive colors models such as RGB or CMY as shown above are not well suited
+for describing colors in terms that are practical for human interpretation.
 When humans view a color object we describe it by its hue, saturation and
-brightness while hue is a color attribute that describes a pure color.
-Brightness is a subjective descriptor that is  practically impossible to
-measure. It embodies the achromatic notion ò intensity and is one of the key
-factors in describing color sensation.The HSI(hue, saturation, intensity) color
-model decouples the intensity component from the color carrying information in
-a color image. The HSI model is an ideal tool for developing image processing
-algorithms based on color descriptions that are natural and intuitive to
-humans, who after all are the developers and users of these algorithms.
+brightness.
 \begin{center}
-  \includegraphics[width=0.55\textwidth]{hsi.png}
+  \includegraphics[width=0.69\textwidth]{hsv.png}
 \end{center}
 
-The angle from the red axis gives the hue, the length of the vector is the
-saturation and the intensity is given by the position of the plane on the
-vertical intensity axis
+While hue is the dominant color as perceived by an observer (red, orange,
+or yellow), saturation is the relative purity of color---pure spectrum colors
+are fully saturated~\cite{cs5420}.  The definition of value is some what less
+trivial, and thus will be shown as Python code converting from BGR to HSV
+and vice versa\footnote{This is taken from Python standard library
+\texttt{colorsys}, and adapted from RGB to BGR for OpenCV usage.}:
+\begin{verbatim}
+def bgr_to_hsv(b, g, r):
+    """Convert a pixel in BGR to HSV."""
+    minc, maxc = min(r, g, b), max(r, g, b)
+    if minc == maxc: return 0.0, 0.0, maxc
+    diff = maxc - minc
+    sat = diff / maxc
+    rc, gc, bc = (maxc-r)/diff, (maxc-g)/diff, (maxc-b)/diff
+    if r == maxc: return (bc-gc)/6%1, sat, maxc
+    if g == maxc: return (2.0+rc-bc)/6%1, sat, maxc
+    if b == maxc: return (4.0+gc-rc)/6%1, sat, maxc
+
+def hsv_to_bgr(h, s, v):
+    """Convert a pixel in HSV to BGR."""
+    if s == 0.0: return v, v, v
+    f = h * 6 % 1
+    p = v * (1 - s)
+    q = v * (1 - s*f)
+    t = v * (1 - s*(1 - f))
+    i = int(h*6%6)
+    if i == 0: return p, t, v
+    if i == 1: return p, v, q
+    if i == 2: return t, v, p
+    if i == 3: return v, q, p
+    if i == 4: return v, p, t
+    if i == 5: return q, p, v
+\end{verbatim}
+
+To use these with images whose pixels stored as 8-bit unsigned integers,
+we decorate them with
+\begin{verbatim}
+def hhu(func):
+    return lambda a, b, c: [
+        int(i*255) for i in func(a/255, b/255, c/255)]
+\end{verbatim}
+then the conversion of images stored as NumPy arrays of \verb|uint8|
+will be as trivial as
+\begin{verbatim}
+from itertools import starmap
+from numpy import reshape, uint8
+
+def convert_color(image, func):
+    x, y, z = image.shape
+    return reshape(list(starmap(func, reshape(image, (x*y, z)))),
+                   (x, y, z)).astype(uint8)
+\end{verbatim}
+
+As a simple test, conversion back and forth should give the same image:
+\verb|convert_color(convert_color(image, bgr_to_hsv), hsv_to_bgr)|.
+We noticed that our implementation in pure Python is significantly slower
+than OpenCV's \verb|cvtColor| which is from a C extension module.
+
 
 \section{Color Image Enhancements}
 \subsection{Contrast Stretching}
@@ -212,6 +258,9 @@ YouTube\footnote{\url{https://www.youtube.com/watch?v=QVGAaoordpk}}.
          {``Color Image Processing''}.
     \emph{CS 5420: Digital Image Processing}.
     University Of Missouri---St.~Louis, Fall 2018.
+  \bibitem{rgb} Robert Hirsch.
+    \emph{Exploring Colour Photography: A Complete Guide}.
+    Laurence King Publishing, 2004. ISBN 1-85669-420-8.
   \bibitem{turbo} Anton Mikhailov.
     \href{https://ai.googleblog.com/2019/08/turbo-improved-rainbow-colormap-for.html}
          {\emph{Turbo, An Improved Rainbow Colormap for Visualization}}.

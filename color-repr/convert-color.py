@@ -6,6 +6,7 @@ from numpy import reshape, uint8
 
 
 def hhu(func):
+    """Decorator to wrap floating point operations to uinit8."""
     return lambda a, b, c: [int(i*255) for i in func(a/255, b/255, c/255)]
 
 
@@ -40,6 +41,7 @@ def hsv_to_bgr(h, s, v):
 
 
 def convert_color(image, func):
+    """Convert the image from one color space to another based on func."""
     x, y, z = image.shape
     return reshape(list(starmap(func, reshape(image, (x*y, z)))), (x, y, z))
 
