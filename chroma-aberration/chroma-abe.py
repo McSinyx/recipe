@@ -63,11 +63,11 @@ def chroma_abbe_corr(src):
     return src
 
 
-img = imread('ca4_before.png')
+if __name__ == '__main__':
+    img = imread('ca4_before.png')
+    imshow('Origin', img)
+    waitKey()
 
-imshow('Origin', img)
-waitKey()
-
-res = chroma_abbe_corr(img)
-imshow('Corrected', res)
-waitKey()
+    res = chroma_abbe_corr(img)
+    imshow('Corrected', res)
+    waitKey()
