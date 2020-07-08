@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from cv2 import imread, imshow, waitKey, merge
+from cv2 import imread, imshow, waitKey
 from numpy import transpose
 
 
@@ -33,11 +33,17 @@ def chromabe(blue, green, red, h, w, threshold):
                 rgmin = min(r[lrange] - g[lrange], r[rrange] - g[rrange])
                 for m in range(lrange, rrange):
                     bdiff, rdiff = b[m] - g[m], r[m] - g[m]
-
-                    # Replace the B or R value if the color difference of B/G and R/G is higher/lesser
-                    # than maximum/minimum of color difference on range boundary
-                    b[m] = bgmax + g[m] if bdiff > bgmax else bgmin + g[m] if bdiff < bgmin else b[m]
-                    r[m] = rgmax + g[m] if rdiff > rgmax else rgmin + g[m] if rdiff < rgmin else r[m]
+                    # Replace the B or R value if the color difference
+                    # of B/G and R/G is higher/lesser than the max/min
+                    # color difference on range boundary
+                    if bdiff > bgmax:
+                        b[m] = bgmax + g[m]
+                    elif bdiff < bgmin:
+                        b[m] = bgmin + g[m]
+                    if rdiff > rgmax:
+                        r[m] = rgmax + g[m]
+                    elif rdiff < rgmin:
+                        r[m] = rgmin + g[m]
                 j = rrange - 2
 
 

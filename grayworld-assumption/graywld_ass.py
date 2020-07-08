@@ -1,4 +1,5 @@
-from cv2 import imread, imshow, waitKey, cvtColor, COLOR_BGR2LAB, COLOR_LAB2BGR, split, merge
+from cv2 import (COLOR_BGR2LAB, COLOR_LAB2BGR, cvtColor,
+                 imread, imshow, merge, split, waitKey)
 
 
 def avg_a_b(lab_img, w, h):
@@ -39,6 +40,8 @@ def grayworld_assumption(img):
 
 img = imread('before_img.png')
 imshow('Origin', img)
+waitKey()
+
 res = grayworld_assumption(img)
 imshow('Grayworld Assumption', res)
 waitKey()
