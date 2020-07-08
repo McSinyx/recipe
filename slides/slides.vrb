@@ -1,0 +1,12 @@
+\frametitle{Implementation}
+\begin{verbatim}
+from numpy import stack, vectorize
+
+def map_color(grey, mapping):
+    r = vectorize(lambda i: mapping[i][0])
+    g = vectorize(lambda i: mapping[i][1])
+    b = vectorize(lambda i: mapping[i][2])
+    return stack((b(grey), g(grey), r(grey)), -1)
+\end{verbatim}
+
+\verb|cv2.applyColorMap| is still faster!
