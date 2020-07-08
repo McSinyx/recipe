@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-from cv2 import COLOR_BGR2LAB, COLOR_LAB2BGR, cvtColor, imread, imshow, waitKey
+from cv2 import (COLOR_BGR2LAB, COLOR_LAB2BGR, IMWRITE_PNG_COMPRESSION,
+                 cvtColor, imread, imshow, imwrite, waitKey)
 from numpy import average
+
+PNG_COMPRESSION = IMWRITE_PNG_COMPRESSION, 9
 
 
 def grayworld_assumption(img):
@@ -22,4 +25,5 @@ if __name__ == '__main__':
 
     res = grayworld_assumption(img)
     imshow('Grayworld Assumption', res)
+    imwrite('after_img.png', res, PNG_COMPRESSION)
     waitKey()

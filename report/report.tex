@@ -174,34 +174,66 @@ than OpenCV's \verb|cvtColor| which is from a C extension module.
 
 
 \section{Color Image Enhancements}
-\subsection{Contrast Stretching}
-Contrast Stretching is a linear image enhancement technique that tries to
-improve the contrast by stretching the intensity values of an image to fill the
-entire dynamic range.
-
-An image of low contrast has a small difference between its dark and light
-pixel values.  The histogram of a low contrast image is usually bends to the
-left (mostly light) or to the right (mostly dark), or located around the middle
-(mostly gray).  Contrast Stretching computes the highest and the lowest pixel
-intensity values, sets them to 255 and 0 respectively, and scales all other
-pixel intensities accordingly.
-\[\mathrm{contrast} = \frac{I_\mathrm{max}-I_\mathrm{min}}
-                           {I_\mathrm{max}+I_\mathrm{min}}\]
-
+\subsection{Chromatic Aberation Mitigation}
+Chromatic Aberation is a failure of a lens to focus all colors to the same point.
+The fringes are more obvious in pictures taken using cheaper lenses.
+Since this is lens-dependent, mitigation is not as easy as we first thought.
+That being said, detection of such degration is not difficult
 \begin{center}
-  \includegraphics[width = 0.40\textwidth]{contrast-mapping.png}
+  \includegraphics[width=0.49\textwidth]{ca4_before.png}
+  \includegraphics[width=0.49\textwidth]{ca4_detect.png}
 \end{center}
 
-Both Contrast Stretching or Histogram Equalization can be used to adjust image
-intensities to enhance contrast of pictures.  While a non-linear Histogram
-Equalization technique is more reliable, in contrast stretching, there exists a
-one-to-one relationship of the intensity values between the source image and
-the target image i.e, the original image can be restored from the
-contrast-stretched image.  This cannot be done with Histogram Equalization.
+\subsection{White Balancing}
+Assuming we have a good distribution of colors in the image, the average
+reflected color should be the color of the light. If the light source is
+assumed to be white, we would know how much white-point should be moved in the
+color cube.
 
-\subsection{Component Stretching}
+The grayworld assumption compensation is an approximation of the measurement
+taken by digital still and video cameras by capturing an evenly lit white sheet
+of paper or similar.
+\begin{verbatim}
+def grayworld_assumption(img):
+    result = cvtColor(img, COLOR_BGR2LAB)
+    avg_a = average(result[:, :, 1])
+    avg_b = average(result[:, :, 2])
+    result[:, :, 1] = (result[:, :, 1]
+                       - (avg_a-128)*(result[:, :, 0]/255)*1.1)
+    result[:, :, 2] = (result[:, :, 2]
+                       - (avg_b-128)*(result[:, :, 0]/255)*1.1)
+    result = cvtColor(result, COLOR_LAB2BGR)
+    return result
+\end{verbatim}
 
-\subsection{Local Contrast Enhancement}
+The CIE LAB color space is used because much greater shifts could be made,
+color shifts do not affect contrast and contrast shifts in turn don't affect
+color. It expresses color as three values:
+\begin{itemize}
+  \item L* for the lightness from black (0) to white (100)
+  \item a* from green to red
+  \item b* from blue to yellow.
+\end{itemize}
+
+First, the average values are calculated for a* and b* channels. The OpenCV
+library LAB color space is not interpreted as CV internal conventions for LAB
+definition 8-bit color depth. So, the conversions are done as:
+\begin{itemize}
+  \item L* : $\dfrac{L * 255}{100}$
+  \item a* : a + 128
+  \item b* : b + 128
+\end{itemize}
+
+The colors in a and b channels are then shifted relative to their lightness
+level. The 1.1 overshoot is because we cannot be sure to have gotten the data
+in the first place.
+\[a_\mathrm{shift} = a * \frac{L}{100} * 1.1\]
+
+The resulting image is quite enhanced compared to the original.
+\begin{center}
+  \includegraphics[width=0.49\textwidth]{before_img.png}
+  \includegraphics[width=0.49\textwidth]{after_img.png}
+\end{center}
 
 \section{Pseudo Color Rendering}
 By mapping each intensity level to a color, one may derive a pseudo color image
@@ -251,6 +283,11 @@ YouTube\footnote{\url{https://www.youtube.com/watch?v=QVGAaoordpk}}.
 \end{center}
 
 \section{Conclusion}
+Through working on these experiments, we have gained certain understandings on
+color image processing, as well as improving our skills in Python and NumPy
+and OpenCV.  It was also concluded that very often, in practice it is not a wise
+idea to write lower-level image processing code in Python---C/C++ or even Cython
+would be much better performance-wise.
 
 \begin{thebibliography}{69}
   \bibitem{cs5420} Sanjiv~K.~Bhatia.
