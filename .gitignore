@@ -138,3 +138,4 @@ dmypy.json
 *.snm
 *.synctex.gz
 *.toc
+*.vrb

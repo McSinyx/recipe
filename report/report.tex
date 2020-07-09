@@ -202,6 +202,7 @@ def grayworld_assumption(img):
                        - (avg_a-128)*(result[:, :, 0]/255)*1.1)
     result[:, :, 2] = (result[:, :, 2]
                        - (avg_b-128)*(result[:, :, 0]/255)*1.1)
+
     result = cvtColor(result, COLOR_LAB2BGR)
     return result
 \end{verbatim}
@@ -219,7 +220,7 @@ First, the average values are calculated for a* and b* channels. The OpenCV
 library LAB color space is not interpreted as CV internal conventions for LAB
 definition 8-bit color depth. So, the conversions are done as:
 \begin{itemize}
-  \item L* : $\dfrac{L * 255}{100}$
+  \item L* : $\dfrac{L \cdot 255}{100}$
   \item a* : a + 128
   \item b* : b + 128
 \end{itemize}
@@ -227,7 +228,7 @@ definition 8-bit color depth. So, the conversions are done as:
 The colors in a and b channels are then shifted relative to their lightness
 level. The 1.1 overshoot is because we cannot be sure to have gotten the data
 in the first place.
-\[a_\mathrm{shift} = a * \frac{L}{100} * 1.1\]
+\[a_\mathrm{shift} = a \cdot \frac{L}{100} \cdot 1.1\]
 
 The resulting image is quite enhanced compared to the original.
 \begin{center}
